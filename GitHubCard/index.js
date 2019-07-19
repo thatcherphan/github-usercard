@@ -6,6 +6,7 @@ axios.get('https://api.github.com/users/Th5tch3r')
   .then((data) => {
     const info = data.data;
     console.log('UserInfo', info);
+    cards.appendChild(cardCreate(info))
   })
   .catch((err) =>{
     console.log('error:', err)
@@ -32,7 +33,20 @@ axios.get('https://api.github.com/users/Th5tch3r')
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['tetondan','dustinmyers','justsml','luishrd','bigknell'];
+
+i = 0;
+followersArray.forEach((user, i) => {
+  axios.get(`https://api.github.com/users/${followersArray[i]}`)
+    .then (data => {
+      const info = data.data;
+      console.log('UserInfo', info);
+      const cards = document.querySelector('.cards');
+      const cardInfo = cardCreate(info);
+      console.log(cardInfo);
+      cards.appendChild(cardInfo);
+    }), i++;
+  })
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -57,8 +71,8 @@ const followersArray = [];
 const cards = document.querySelector('.cards');
 console.log(cards);
 
-function cardCreate(argument) {
-  const card = document.createElement('.card');
+function cardCreate(arg) {
+  const card = document.createElement('div');
   const img = document.createElement('img');
   const cardInfo = document.createElement('div');
   const name = document.createElement('h2');
@@ -72,7 +86,7 @@ function cardCreate(argument) {
 
 
   card.classList.add('card');
-  img.classList.add('card img');
+  img.classList.add('img');
   name.classList.add('name');
   userName.classList.add('username');
 
@@ -89,14 +103,14 @@ function cardCreate(argument) {
   cardInfo.appendChild(bio);
 
   img.src = arg.avatar_url;
-  location.textContent = arg.location;
+  location.textContent = `Location: ${arg.location}`;
   name.textContent = arg.name;
   userName.textContent = arg.login;
   const aProfileLink = arg.html_url; 
   profileLink.innerHTML = aProfileLink.link(arg.html_url); 
   followers.textContent = `Followers: ${arg.followers}`;
   following.textContent = `Following: ${arg.following}`;
-  bio.textContent = arg.bio; 
+  bio.textContent = `Bio: ${arg.bio}`; 
 
   return card;
 }
